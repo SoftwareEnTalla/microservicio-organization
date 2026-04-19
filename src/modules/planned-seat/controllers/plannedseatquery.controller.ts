@@ -1,0 +1,360 @@
+/*
+ * Copyright (c) 2026 SoftwarEnTalla
+ * Licencia: MIT
+ * Contacto: softwarentalla@gmail.com
+ * CEOs: 
+ *       Persy Morell Guerra      Email: pmorellpersi@gmail.com  Phone : +53-5336-4654 Linkedin: https://www.linkedin.com/in/persy-morell-guerra-288943357/
+ *       Dailyn García Domínguez  Email: dailyngd@gmail.com      Phone : +53-5432-0312 Linkedin: https://www.linkedin.com/in/dailyn-dominguez-3150799b/
+ *
+ * CTO: Persy Morell Guerra
+ * COO: Dailyn García Domínguez and Persy Morell Guerra
+ * CFO: Dailyn García Domínguez and Persy Morell Guerra
+ *
+ * Repositories: 
+ *               https://github.com/SoftwareEnTalla 
+ *
+ *               https://github.com/apokaliptolesamale?tab=repositories
+ *
+ *
+ * Social Networks:
+ *
+ *              https://x.com/SoftwarEnTalla
+ *
+ *              https://www.facebook.com/profile.php?id=61572625716568
+ *
+ *              https://www.instagram.com/softwarentalla/
+ *              
+ *
+ *
+ */
+
+
+import {
+  Controller,
+  Get,
+  Query,
+  Param,
+  NotFoundException,
+  Logger,
+  UseGuards,
+} from "@nestjs/common";
+import { PlannedSeatQueryService } from "../services/plannedseatquery.service";
+import { FindManyOptions } from "typeorm";
+import { ApiTags, ApiOperation, ApiResponse, ApiQuery, ApiParam, ApiBearerAuth, ApiUnauthorizedResponse } from "@nestjs/swagger";
+import { LogExecutionTime } from "src/common/logger/loggers.functions";
+import { PlannedSeatResponse, PlannedSeatsResponse } from "../types/plannedseat.types";
+import { LoggerClient } from "src/common/logger/logger.client";
+import { PlannedSeat } from "../entities/planned-seat.entity";
+import { PlannedSeatAuthGuard } from "../guards/plannedseatauthguard.guard";
+import { PaginationArgs } from "src/common/dto/args/pagination.args";
+import { OrderBy, valueOfOrderBy } from "src/common/types/common.types";
+import { Helper } from "src/common/helpers/helpers";
+import { PlannedSeatDto } from "../dtos/all-dto";
+
+import { logger } from '@core/logs/logger';
+
+@ApiTags("PlannedSeat Query")
+@UseGuards(PlannedSeatAuthGuard)
+@ApiBearerAuth()
+@ApiUnauthorizedResponse({ description: "Autenticación requerida." })
+@Controller("plannedseats/query")
+export class PlannedSeatQueryController {
+  #logger = new Logger(PlannedSeatQueryController.name);
+
+  constructor(private readonly service: PlannedSeatQueryService) {}
+
+  @Get("list")
+  @ApiOperation({ summary: "Get all plannedseat with optional pagination" })
+  @ApiResponse({ status: 200, type: PlannedSeatsResponse })
+  @ApiQuery({ name: "options", required: false, type: PlannedSeatDto }) // Ajustar según el tipo real
+  @ApiQuery({ name: "page", required: false, type: Number })
+  @ApiQuery({ name: "size", required: false, type: Number })
+  @ApiQuery({ name: "sort", required: false, type: String })
+  @ApiQuery({ name: "order", required: false, type: String })
+  @ApiQuery({ name: "search", required: false, type: String })
+  @ApiQuery({ name: "initDate", required: false, type: Date })
+  @ApiQuery({ name: "endDate", required: false, type: Date })
+  @LogExecutionTime({
+    layer: "controller",
+    callback: async (logData, client) => {
+      return await client.send(logData);
+    },
+    client: LoggerClient.getInstance()
+      .registerClient(PlannedSeatQueryService.name)
+      .get(PlannedSeatQueryService.name),
+  })
+  async findAll(
+    @Query("options") options?: FindManyOptions<PlannedSeat>    
+  ): Promise<PlannedSeatsResponse<PlannedSeat>> {
+    try {
+     
+      const plannedseats = await this.service.findAll(options);
+      logger.info("Retrieving all plannedseat");
+      return plannedseats;
+    } catch (error) {
+      logger.error(error);
+      return Helper.throwCachedError(error);
+    }
+  }
+
+  @Get(":id")
+  @ApiOperation({ summary: "Get plannedseat by ID" })
+  @ApiResponse({ status: 200, type: PlannedSeatResponse<PlannedSeat> })
+  @ApiResponse({ status: 404, description: "PlannedSeat not found" })
+  @ApiParam({ name: 'id', required: true, description: 'ID of the plannedseat to retrieve', type: String })
+  @LogExecutionTime({
+    layer: "controller",
+    callback: async (logData, client) => {
+      return await client.send(logData);
+    },
+    client: LoggerClient.getInstance()
+      .registerClient(PlannedSeatQueryService.name)
+      .get(PlannedSeatQueryService.name),
+  })
+  async findById(@Param("id") id: string): Promise<PlannedSeatResponse<PlannedSeat>> {
+    try {
+      const plannedseat = await this.service.findOne({ where: { id } });
+      if (!plannedseat) {
+        throw new NotFoundException(
+          "PlannedSeat no encontrado para el id solicitado"
+        );
+      }
+      return plannedseat;
+    } catch (error) {
+      logger.error(error);
+      return Helper.throwCachedError(error);
+    }
+  }
+
+  @Get("field/:field") // Asegúrate de que el endpoint esté definido correctamente
+  @ApiOperation({ summary: "Find plannedseat by specific field" })
+  @ApiQuery({ name: "value", required: true, description: 'Value to search for', type: String }) // Documenta el parámetro de consulta
+  @ApiParam({ name: 'field', required: true, description: 'Field to filter plannedseat', type: String }) // Documenta el parámetro de la ruta
+  @ApiResponse({ status: 200, type: PlannedSeatsResponse })
+  @LogExecutionTime({
+    layer: "controller",
+    callback: async (logData, client) => {
+      return await client.send(logData);
+    },
+    client: LoggerClient.getInstance()
+      .registerClient(PlannedSeatQueryService.name)
+      .get(PlannedSeatQueryService.name),
+  })
+  async findByField(
+    @Param("field") field: string, // Obtiene el campo de la ruta
+    @Query("value") value: string, // Obtiene el valor de la consulta
+    @Query() paginationArgs?: PaginationArgs
+  ): Promise<PlannedSeatsResponse<PlannedSeat>> {
+    try {
+      const entities = await this.service.findAndCount({
+        where: { [field]: value },
+        skip:
+          ((paginationArgs ? paginationArgs.page : 1) - 1) *
+          (paginationArgs ? paginationArgs.size : 25),
+        take: paginationArgs ? paginationArgs.size : 25,
+      });
+
+      if (!entities) {
+        throw new NotFoundException(
+          "PlannedSeat no encontrados para la propiedad y valor especificado"
+        );
+      }
+      return entities;
+    } catch (error) {
+      logger.error(error);
+      return Helper.throwCachedError(error);
+    }
+  }
+
+
+  @Get("pagination")
+  @ApiOperation({ summary: "Find plannedseats with pagination" })
+  @ApiResponse({ status: 200, type: PlannedSeatsResponse<PlannedSeat> })
+  @ApiQuery({ name: "options", required: false, type: PlannedSeatDto }) // Ajustar según el tipo real
+  @ApiQuery({ name: "page", required: false, type: Number })
+  @ApiQuery({ name: "size", required: false, type: Number })
+  @ApiQuery({ name: "sort", required: false, type: String })
+  @ApiQuery({ name: "order", required: false, type: String })
+  @ApiQuery({ name: "search", required: false, type: String })
+  @ApiQuery({ name: "initDate", required: false, type: Date })
+  @ApiQuery({ name: "endDate", required: false, type: Date })
+  @LogExecutionTime({
+    layer: "controller",
+    callback: async (logData, client) => {
+      return await client.send(logData);
+    },
+    client: LoggerClient.getInstance()
+      .registerClient(PlannedSeatQueryService.name)
+      .get(PlannedSeatQueryService.name),
+  })
+  async findWithPagination(
+    @Query() options: FindManyOptions<PlannedSeat>,
+    @Query("page") page?: number,
+    @Query("size") size?: number,
+    @Query("sort") sort?: string,
+    @Query("order") order?: string,
+    @Query("search") search?: string,
+    @Query("initDate") initDate?: Date,
+    @Query("endDate") endDate?: Date
+  ): Promise<PlannedSeatsResponse<PlannedSeat>> {
+    try {
+     const paginationArgs: PaginationArgs = PaginationArgs.createPaginator(
+        page || 1,
+        size || 25,
+        sort || "createdAt", // Asigna valor por defecto
+        valueOfOrderBy(order || OrderBy.asc), // Asigna valor por defecto
+        search || "", // Asigna valor por defecto
+        initDate || undefined, // Puede ser undefined si no se proporciona
+        endDate || undefined // Puede ser undefined si no se proporciona
+      );
+      const entities = await this.service.findWithPagination(
+        options,
+        paginationArgs
+      );
+      if (!entities) {
+        throw new NotFoundException("Entidades PlannedSeats no encontradas.");
+      }
+      return entities;
+    } catch (error) {
+      logger.error(error);
+      return Helper.throwCachedError(error);
+    }
+  }
+
+  @Get("count")
+  @ApiOperation({ summary: "Count all plannedseats" })
+  @ApiResponse({ status: 200, type: Number })
+  @LogExecutionTime({
+    layer: "controller",
+    callback: async (logData, client) => {
+      return await client.send(logData);
+    },
+    client: LoggerClient.getInstance()
+      .registerClient(PlannedSeatQueryService.name)
+      .get(PlannedSeatQueryService.name),
+  })
+  async count(): Promise<number> {
+    return this.service.count();
+  }
+
+  @Get("search")
+  @ApiOperation({ summary: "Find and count plannedseats with conditions" })
+  @ApiResponse({ status: 200, type: PlannedSeatsResponse<PlannedSeat> })
+  @ApiQuery({ name: "where", required: true, type: Object }) // Ajustar según el tipo real
+  @ApiQuery({ name: "page", required: false, type: Number })
+  @ApiQuery({ name: "size", required: false, type: Number })
+  @ApiQuery({ name: "sort", required: false, type: String })
+  @ApiQuery({ name: "order", required: false, type: String })
+  @ApiQuery({ name: "search", required: false, type: String })
+  @ApiQuery({ name: "initDate", required: false, type: Date })
+  @ApiQuery({ name: "endDate", required: false, type: Date })
+  @LogExecutionTime({
+    layer: "controller",
+    callback: async (logData, client) => {
+      return await client.send(logData);
+    },
+    client: LoggerClient.getInstance()
+      .registerClient(PlannedSeatQueryService.name)
+      .get(PlannedSeatQueryService.name),
+  })
+  async findAndCount(
+    @Query() where: Record<string, any>={},
+    @Query("page") page?: number,
+    @Query("size") size?: number,
+    @Query("sort") sort?: string,
+    @Query("order") order?: string,
+    @Query("search") search?: string,
+    @Query("initDate") initDate?: Date,
+    @Query("endDate") endDate?: Date
+  ): Promise<PlannedSeatsResponse<PlannedSeat>> {
+    try {
+      const paginationArgs: PaginationArgs = PaginationArgs.createPaginator(
+        page || 1,
+        size || 25,
+        sort || "createdAt", // Asigna valor por defecto
+        valueOfOrderBy(order || OrderBy.asc), // Asigna valor por defecto
+        search || "", // Asigna valor por defecto
+        initDate || undefined, // Puede ser undefined si no se proporciona
+        endDate || undefined // Puede ser undefined si no se proporciona
+      );
+      const entities = await this.service.findAndCount({
+        where: where,
+        paginationArgs: paginationArgs,
+      });
+
+      if (!entities) {
+        throw new NotFoundException(
+          "Entidades PlannedSeats no encontradas para el criterio especificado."
+        );
+      }
+      return entities;
+    } catch (error) {
+      logger.error(error);
+      return Helper.throwCachedError(error);
+    }
+  }
+
+  @Get("find-one")
+  @ApiOperation({ summary: "Find one plannedseat with conditions" })
+  @ApiResponse({ status: 200, type: PlannedSeatResponse<PlannedSeat> })
+  @ApiQuery({ name: "where", required: true, type: Object }) // Ajustar según el tipo real
+  @LogExecutionTime({
+    layer: "controller",
+    callback: async (logData, client) => {
+      return await client.send(logData);
+    },
+    client: LoggerClient.getInstance()
+      .registerClient(PlannedSeatQueryService.name)
+      .get(PlannedSeatQueryService.name),
+  })
+  async findOne(
+    @Query() where: Record<string, any>={}
+  ): Promise<PlannedSeatResponse<PlannedSeat>> {
+    try {
+      const entity = await this.service.findOne({
+        where: where,
+      });
+
+      if (!entity) {
+        throw new NotFoundException("Entidad PlannedSeat no encontrada.");
+      }
+      return entity;
+    } catch (error) {
+      logger.error(error);
+      return Helper.throwCachedError(error);
+    }
+  }
+
+  @Get("find-one-or-fail")
+  @ApiOperation({ summary: "Find one plannedseat or return error" })
+  @ApiResponse({ status: 200, type: PlannedSeatResponse<PlannedSeat> })
+  @ApiQuery({ name: "where", required: true, type: Object }) // Ajustar según el tipo real
+  @LogExecutionTime({
+    layer: "controller",
+    callback: async (logData, client) => {
+      return await client.send(logData);
+    },
+    client: LoggerClient.getInstance()
+      .registerClient(PlannedSeatQueryService.name)
+      .get(PlannedSeatQueryService.name),
+  })
+  async findOneOrFail(
+    @Query() where: Record<string, any>={}
+  ): Promise<PlannedSeatResponse<PlannedSeat> | Error> {
+    try {
+      const entity = await this.service.findOne({
+        where: where,
+      });
+
+      if (!entity) {
+        return new NotFoundException("Entidad PlannedSeat no encontrada.");
+      }
+      return entity;
+    } catch (error) {
+      logger.error(error);
+      return Helper.throwCachedError(error);
+    }
+  }
+}
+
+

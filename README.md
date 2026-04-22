@@ -1,6 +1,6 @@
 # ORGANIZATION Microservice
 
-**Creation Date**: 2026-04-18
+**Creation Date**: 2026-04-21
 
 **Author**: Ing. Persy Morell Guerra e Ing. Dailyn García Dominguez (SoftwarEnTalla CEO)
 
@@ -25,12 +25,38 @@
 | |____services
 | |____tda
 |____database
+|____docs
 |____errors
 |____filters
 |____i18n
 |____interfaces
 |____migrations
 |____modules
+| |____catalog-sync-log
+| | |____aggregates
+| | |____commands
+| | | |____handlers
+| | |____config
+| | |____controllers
+| | |____decorators
+| | |____dtos
+| | |____entities
+| | |____events
+| | |____graphql
+| | |____guards
+| | |____interceptors
+| | |____modules
+| | |____queries
+| | | |____handlers
+| | |____repositories
+| | |____sagas
+| | |____services
+| | |____shared
+| | | |____adapters
+| | | |____decorators
+| | | |____event-store
+| | | |____messaging
+| | |____types
 | |____headcount-override
 | | |____aggregates
 | | |____commands

@@ -48,6 +48,9 @@ import { LoggingModule } from "./modules/organization/modules/logger.module";
 import { ModuleRef } from "@nestjs/core";
 import { ServiceRegistry } from "@core/service-registry";
 import LoggerService, { logger } from "@core/logs/logger";
+import { CatalogSyncLogModule } from "./modules/catalog-sync-log/modules/catalogsynclog.module";
+import { CatalogSyncLogCommandService } from "./modules/catalog-sync-log/services/catalogsynclogcommand.service";
+import { CatalogSyncLogQueryService } from "./modules/catalog-sync-log/services/catalogsynclogquery.service";
 import { HeadcountOverrideModule } from "./modules/headcount-override/modules/headcountoverride.module";
 import { HeadcountOverrideCommandService } from "./modules/headcount-override/services/headcountoverridecommand.service";
 import { HeadcountOverrideQueryService } from "./modules/headcount-override/services/headcountoverridequery.service";
@@ -126,7 +129,8 @@ import LoggerService, { logger } from "@core/logs/logger";
      */
     CqrsModule,
     OrganizationModule,
-        HeadcountOverrideModule,
+        CatalogSyncLogModule,
+    HeadcountOverrideModule,
     NodeAssignmentModule,
     OrganizationNodeAttributeModule,
     OrganizationNodeModule,
@@ -216,6 +220,8 @@ export class OrganizationAppModule implements OnModuleInit {
     ServiceRegistry.getInstance().registryAll([
       OrganizationCommandService,
       OrganizationQueryService,
+      CatalogSyncLogCommandService,
+      CatalogSyncLogQueryService,
       HeadcountOverrideCommandService,
       HeadcountOverrideQueryService,
       NodeAssignmentCommandService,

@@ -53,7 +53,8 @@ import { IEventHandler, EventsHandler } from '@nestjs/cqrs';
 import { OrganizationCreatedEvent } from '../events/organizationcreated.event';
 import { OrganizationUpdatedEvent } from '../events/organizationupdated.event';
 import { OrganizationDeletedEvent } from '../events/organizationdeleted.event';
-
+import { OrganizationRootCreatedEvent } from "../events/organizationrootcreated.event";
+import { OrganizationArchivedEvent } from "../events/organizationarchived.event";
 
 //Enfoque Event Sourcing
 import { CommandBus, EventBus } from '@nestjs/cqrs';
@@ -66,7 +67,7 @@ import { EventSourcingHelper } from '../shared/decorators/event-sourcing.helper'
 import { EventSourcingConfigOptions } from '../shared/decorators/event-sourcing.decorator';
 
 
-@EventsHandler(OrganizationCreatedEvent, OrganizationUpdatedEvent, OrganizationDeletedEvent)
+@EventsHandler(OrganizationCreatedEvent, OrganizationUpdatedEvent, OrganizationDeletedEvent, OrganizationRootCreatedEvent, OrganizationArchivedEvent)
 @Injectable()
 export class OrganizationCommandRepository implements IEventHandler<BaseEvent>{
 
@@ -158,7 +159,10 @@ export class OrganizationCommandRepository implements IEventHandler<BaseEvent>{
         return await this.onOrganizationUpdated(event);
       case 'OrganizationDeletedEvent':
         return await this.onOrganizationDeleted(event);
-
+      case 'OrganizationRootCreatedEvent':
+        return await this.onOrganizationRootCreated(event);
+      case 'OrganizationArchivedEvent':
+        return await this.onOrganizationArchived(event);
     }
     return false;
   }
@@ -252,6 +256,33 @@ export class OrganizationCommandRepository implements IEventHandler<BaseEvent>{
     return await this.repository.delete(event.aggregateId);
   }
 
+  private async onOrganizationRootCreated(event: OrganizationRootCreatedEvent) {
+    logger.info('Ready to handle onOrganizationRootCreated event on repository:', event);
+    const payloadInstance = (event as any).payload?.instance;
+    if (payloadInstance) {
+      const projectedEntity = this.repository.create({
+        ...(payloadInstance as any),
+        id: event.aggregateId,
+        type: 'organization'
+      } as Partial<Organization>);
+      return await this.repository.save(projectedEntity as Organization);
+    }
+    return true;
+  }
+
+  private async onOrganizationArchived(event: OrganizationArchivedEvent) {
+    logger.info('Ready to handle onOrganizationArchived event on repository:', event);
+    const payloadInstance = (event as any).payload?.instance;
+    if (payloadInstance) {
+      const projectedEntity = this.repository.create({
+        ...(payloadInstance as any),
+        id: event.aggregateId,
+        type: 'organization'
+      } as Partial<Organization>);
+      return await this.repository.save(projectedEntity as Organization);
+    }
+    return true;
+  }
 
 
   // ----------------------------

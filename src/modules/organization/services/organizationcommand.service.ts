@@ -51,7 +51,8 @@ import { KafkaEventPublisher } from "../shared/adapters/kafka-event-publisher";
 import { ModuleRef } from "@nestjs/core";
 import { OrganizationQueryService } from "./organizationquery.service";
 import { BaseEvent } from "../events/base.event";
-
+import { OrganizationRootCreatedEvent } from '../events/organizationrootcreated.event';
+import { OrganizationArchivedEvent } from '../events/organizationarchived.event';
 
 @Injectable()
 export class OrganizationCommandService implements OnModuleInit {

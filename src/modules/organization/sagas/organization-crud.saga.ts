@@ -36,7 +36,8 @@ import {
   OrganizationCreatedEvent,
   OrganizationUpdatedEvent,
   OrganizationDeletedEvent,
-
+  OrganizationRootCreatedEvent,
+  OrganizationArchivedEvent,
 } from '../events/exporting.event';
 import {
   SagaOrganizationFailedEvent
@@ -100,6 +101,27 @@ export class OrganizationCrudSaga {
     );
   };
 
+  @Saga()
+  onOrganizationRootCreated = ($events: Observable<OrganizationRootCreatedEvent>) => {
+    return $events.pipe(
+      ofType(OrganizationRootCreatedEvent),
+      tap(event => {
+        this.logger.log(`Saga iniciada para evento de dominio OrganizationRootCreated: ${event.aggregateId}`);
+      }),
+      map(() => null)
+    );
+  };
+
+  @Saga()
+  onOrganizationArchived = ($events: Observable<OrganizationArchivedEvent>) => {
+    return $events.pipe(
+      ofType(OrganizationArchivedEvent),
+      tap(event => {
+        this.logger.log(`Saga iniciada para evento de dominio OrganizationArchived: ${event.aggregateId}`);
+      }),
+      map(() => null)
+    );
+  };
 
   @LogExecutionTime({
     layer: 'saga',

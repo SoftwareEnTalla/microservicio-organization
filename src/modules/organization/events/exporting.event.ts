@@ -30,7 +30,8 @@
 export * from "./organizationdeleted.event"; 
 export * from "./organizationcreated.event";
 export * from "./organizationupdated.event";
-
+export * from "./organizationrootcreated.event";
+export * from "./organizationarchived.event";
 export * from "./event-registry";
 export * from "./base.event";
 export * from "./organization-failed.event";

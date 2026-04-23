@@ -51,7 +51,7 @@ import { KafkaEventPublisher } from "../shared/adapters/kafka-event-publisher";
 import { ModuleRef } from "@nestjs/core";
 import { NodeAssignmentQueryService } from "./nodeassignmentquery.service";
 import { BaseEvent } from "../events/base.event";
-
+import { NodeAssignmentRecordedEvent } from '../events/nodeassignmentrecorded.event';
 
 @Injectable()
 export class NodeAssignmentCommandService implements OnModuleInit {

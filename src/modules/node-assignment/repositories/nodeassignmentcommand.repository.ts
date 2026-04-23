@@ -53,7 +53,7 @@ import { IEventHandler, EventsHandler } from '@nestjs/cqrs';
 import { NodeAssignmentCreatedEvent } from '../events/nodeassignmentcreated.event';
 import { NodeAssignmentUpdatedEvent } from '../events/nodeassignmentupdated.event';
 import { NodeAssignmentDeletedEvent } from '../events/nodeassignmentdeleted.event';
-
+import { NodeAssignmentRecordedEvent } from "../events/nodeassignmentrecorded.event";
 
 //Enfoque Event Sourcing
 import { CommandBus, EventBus } from '@nestjs/cqrs';
@@ -66,7 +66,7 @@ import { EventSourcingHelper } from '../shared/decorators/event-sourcing.helper'
 import { EventSourcingConfigOptions } from '../shared/decorators/event-sourcing.decorator';
 
 
-@EventsHandler(NodeAssignmentCreatedEvent, NodeAssignmentUpdatedEvent, NodeAssignmentDeletedEvent)
+@EventsHandler(NodeAssignmentCreatedEvent, NodeAssignmentUpdatedEvent, NodeAssignmentDeletedEvent, NodeAssignmentRecordedEvent)
 @Injectable()
 export class NodeAssignmentCommandRepository implements IEventHandler<BaseEvent>{
 
@@ -158,7 +158,8 @@ export class NodeAssignmentCommandRepository implements IEventHandler<BaseEvent>
         return await this.onNodeAssignmentUpdated(event);
       case 'NodeAssignmentDeletedEvent':
         return await this.onNodeAssignmentDeleted(event);
-
+      case 'NodeAssignmentRecordedEvent':
+        return await this.onNodeAssignmentRecorded(event);
     }
     return false;
   }
@@ -252,6 +253,19 @@ export class NodeAssignmentCommandRepository implements IEventHandler<BaseEvent>
     return await this.repository.delete(event.aggregateId);
   }
 
+  private async onNodeAssignmentRecorded(event: NodeAssignmentRecordedEvent) {
+    logger.info('Ready to handle onNodeAssignmentRecorded event on repository:', event);
+    const payloadInstance = (event as any).payload?.instance;
+    if (payloadInstance) {
+      const projectedEntity = this.repository.create({
+        ...(payloadInstance as any),
+        id: event.aggregateId,
+        type: 'node-assignment'
+      } as Partial<NodeAssignment>);
+      return await this.repository.save(projectedEntity as NodeAssignment);
+    }
+    return true;
+  }
 
 
   // ----------------------------

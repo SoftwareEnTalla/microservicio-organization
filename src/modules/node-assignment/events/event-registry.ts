@@ -33,6 +33,7 @@ import { BaseEvent } from './base.event';
 import { NodeAssignmentCreatedEvent } from './nodeassignmentcreated.event';
 import { NodeAssignmentUpdatedEvent } from './nodeassignmentupdated.event';
 import { NodeAssignmentDeletedEvent } from './nodeassignmentdeleted.event';
+import { NodeAssignmentRecordedEvent } from './nodeassignmentrecorded.event';
 
 export type RegisteredEventClass<T extends BaseEvent = BaseEvent> = new (
   aggregateId: string,
@@ -77,7 +78,7 @@ export const EVENT_DEFINITIONS: Record<string, RegisteredEventDefinition> = {
   'node-assignment-created': createEventDefinition('node-assignment-created', NodeAssignmentCreatedEvent, EVENT_DEFINITION_OVERRIDES['node-assignment-created']),
   'node-assignment-updated': createEventDefinition('node-assignment-updated', NodeAssignmentUpdatedEvent, EVENT_DEFINITION_OVERRIDES['node-assignment-updated']),
   'node-assignment-deleted': createEventDefinition('node-assignment-deleted', NodeAssignmentDeletedEvent, EVENT_DEFINITION_OVERRIDES['node-assignment-deleted']),
-
+  'node-assignment-recorded': createEventDefinition('node-assignment-recorded', NodeAssignmentRecordedEvent, EVENT_DEFINITION_OVERRIDES['node-assignment-recorded']),
 };
 
 export const EVENT_REGISTRY: Record<string, RegisteredEventClass> = Object.fromEntries(

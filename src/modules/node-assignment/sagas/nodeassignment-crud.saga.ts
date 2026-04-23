@@ -36,7 +36,7 @@ import {
   NodeAssignmentCreatedEvent,
   NodeAssignmentUpdatedEvent,
   NodeAssignmentDeletedEvent,
-
+  NodeAssignmentRecordedEvent,
 } from '../events/exporting.event';
 import {
   SagaNodeAssignmentFailedEvent
@@ -100,6 +100,16 @@ export class NodeAssignmentCrudSaga {
     );
   };
 
+  @Saga()
+  onNodeAssignmentRecorded = ($events: Observable<NodeAssignmentRecordedEvent>) => {
+    return $events.pipe(
+      ofType(NodeAssignmentRecordedEvent),
+      tap(event => {
+        this.logger.log(`Saga iniciada para evento de dominio NodeAssignmentRecorded: ${event.aggregateId}`);
+      }),
+      map(() => null)
+    );
+  };
 
   @LogExecutionTime({
     layer: 'saga',

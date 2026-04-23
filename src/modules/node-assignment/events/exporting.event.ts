@@ -30,7 +30,7 @@
 export * from "./nodeassignmentdeleted.event"; 
 export * from "./nodeassignmentcreated.event";
 export * from "./nodeassignmentupdated.event";
-
+export * from "./nodeassignmentrecorded.event";
 export * from "./event-registry";
 export * from "./base.event";
 export * from "./nodeassignment-failed.event";

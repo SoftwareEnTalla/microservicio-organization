@@ -51,7 +51,10 @@ import { KafkaEventPublisher } from "../shared/adapters/kafka-event-publisher";
 import { ModuleRef } from "@nestjs/core";
 import { HeadcountOverrideQueryService } from "./headcountoverridequery.service";
 import { BaseEvent } from "../events/base.event";
-
+import { OverrideAppliedEvent } from '../events/overrideapplied.event';
+import { OverrideReleasedEvent } from '../events/overridereleased.event';
+import { OverrideSupersededEvent } from '../events/overridesuperseded.event';
+import { OverrideExpiredEvent } from '../events/overrideexpired.event';
 
 @Injectable()
 export class HeadcountOverrideCommandService implements OnModuleInit {

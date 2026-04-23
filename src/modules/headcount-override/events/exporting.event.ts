@@ -30,7 +30,10 @@
 export * from "./headcountoverridedeleted.event"; 
 export * from "./headcountoverridecreated.event";
 export * from "./headcountoverrideupdated.event";
-
+export * from "./overrideapplied.event";
+export * from "./overridereleased.event";
+export * from "./overridesuperseded.event";
+export * from "./overrideexpired.event";
 export * from "./event-registry";
 export * from "./base.event";
 export * from "./headcountoverride-failed.event";

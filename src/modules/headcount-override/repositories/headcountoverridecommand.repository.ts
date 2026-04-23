@@ -53,7 +53,10 @@ import { IEventHandler, EventsHandler } from '@nestjs/cqrs';
 import { HeadcountOverrideCreatedEvent } from '../events/headcountoverridecreated.event';
 import { HeadcountOverrideUpdatedEvent } from '../events/headcountoverrideupdated.event';
 import { HeadcountOverrideDeletedEvent } from '../events/headcountoverridedeleted.event';
-
+import { OverrideAppliedEvent } from "../events/overrideapplied.event";
+import { OverrideReleasedEvent } from "../events/overridereleased.event";
+import { OverrideSupersededEvent } from "../events/overridesuperseded.event";
+import { OverrideExpiredEvent } from "../events/overrideexpired.event";
 
 //Enfoque Event Sourcing
 import { CommandBus, EventBus } from '@nestjs/cqrs';
@@ -66,7 +69,7 @@ import { EventSourcingHelper } from '../shared/decorators/event-sourcing.helper'
 import { EventSourcingConfigOptions } from '../shared/decorators/event-sourcing.decorator';
 
 
-@EventsHandler(HeadcountOverrideCreatedEvent, HeadcountOverrideUpdatedEvent, HeadcountOverrideDeletedEvent)
+@EventsHandler(HeadcountOverrideCreatedEvent, HeadcountOverrideUpdatedEvent, HeadcountOverrideDeletedEvent, OverrideAppliedEvent, OverrideReleasedEvent, OverrideSupersededEvent, OverrideExpiredEvent)
 @Injectable()
 export class HeadcountOverrideCommandRepository implements IEventHandler<BaseEvent>{
 
@@ -158,7 +161,14 @@ export class HeadcountOverrideCommandRepository implements IEventHandler<BaseEve
         return await this.onHeadcountOverrideUpdated(event);
       case 'HeadcountOverrideDeletedEvent':
         return await this.onHeadcountOverrideDeleted(event);
-
+      case 'OverrideAppliedEvent':
+        return await this.onOverrideApplied(event);
+      case 'OverrideReleasedEvent':
+        return await this.onOverrideReleased(event);
+      case 'OverrideSupersededEvent':
+        return await this.onOverrideSuperseded(event);
+      case 'OverrideExpiredEvent':
+        return await this.onOverrideExpired(event);
     }
     return false;
   }
@@ -252,6 +262,61 @@ export class HeadcountOverrideCommandRepository implements IEventHandler<BaseEve
     return await this.repository.delete(event.aggregateId);
   }
 
+  private async onOverrideApplied(event: OverrideAppliedEvent) {
+    logger.info('Ready to handle onOverrideApplied event on repository:', event);
+    const payloadInstance = (event as any).payload?.instance;
+    if (payloadInstance) {
+      const projectedEntity = this.repository.create({
+        ...(payloadInstance as any),
+        id: event.aggregateId,
+        type: 'headcount-override'
+      } as Partial<HeadcountOverride>);
+      return await this.repository.save(projectedEntity as HeadcountOverride);
+    }
+    return true;
+  }
+
+  private async onOverrideReleased(event: OverrideReleasedEvent) {
+    logger.info('Ready to handle onOverrideReleased event on repository:', event);
+    const payloadInstance = (event as any).payload?.instance;
+    if (payloadInstance) {
+      const projectedEntity = this.repository.create({
+        ...(payloadInstance as any),
+        id: event.aggregateId,
+        type: 'headcount-override'
+      } as Partial<HeadcountOverride>);
+      return await this.repository.save(projectedEntity as HeadcountOverride);
+    }
+    return true;
+  }
+
+  private async onOverrideSuperseded(event: OverrideSupersededEvent) {
+    logger.info('Ready to handle onOverrideSuperseded event on repository:', event);
+    const payloadInstance = (event as any).payload?.instance;
+    if (payloadInstance) {
+      const projectedEntity = this.repository.create({
+        ...(payloadInstance as any),
+        id: event.aggregateId,
+        type: 'headcount-override'
+      } as Partial<HeadcountOverride>);
+      return await this.repository.save(projectedEntity as HeadcountOverride);
+    }
+    return true;
+  }
+
+  private async onOverrideExpired(event: OverrideExpiredEvent) {
+    logger.info('Ready to handle onOverrideExpired event on repository:', event);
+    const payloadInstance = (event as any).payload?.instance;
+    if (payloadInstance) {
+      const projectedEntity = this.repository.create({
+        ...(payloadInstance as any),
+        id: event.aggregateId,
+        type: 'headcount-override'
+      } as Partial<HeadcountOverride>);
+      return await this.repository.save(projectedEntity as HeadcountOverride);
+    }
+    return true;
+  }
 
 
   // ----------------------------

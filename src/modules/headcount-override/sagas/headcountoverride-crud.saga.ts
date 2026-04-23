@@ -36,7 +36,10 @@ import {
   HeadcountOverrideCreatedEvent,
   HeadcountOverrideUpdatedEvent,
   HeadcountOverrideDeletedEvent,
-
+  OverrideAppliedEvent,
+  OverrideReleasedEvent,
+  OverrideSupersededEvent,
+  OverrideExpiredEvent,
 } from '../events/exporting.event';
 import {
   SagaHeadcountOverrideFailedEvent
@@ -100,6 +103,49 @@ export class HeadcountOverrideCrudSaga {
     );
   };
 
+  @Saga()
+  onOverrideApplied = ($events: Observable<OverrideAppliedEvent>) => {
+    return $events.pipe(
+      ofType(OverrideAppliedEvent),
+      tap(event => {
+        this.logger.log(`Saga iniciada para evento de dominio OverrideApplied: ${event.aggregateId}`);
+      }),
+      map(() => null)
+    );
+  };
+
+  @Saga()
+  onOverrideReleased = ($events: Observable<OverrideReleasedEvent>) => {
+    return $events.pipe(
+      ofType(OverrideReleasedEvent),
+      tap(event => {
+        this.logger.log(`Saga iniciada para evento de dominio OverrideReleased: ${event.aggregateId}`);
+      }),
+      map(() => null)
+    );
+  };
+
+  @Saga()
+  onOverrideSuperseded = ($events: Observable<OverrideSupersededEvent>) => {
+    return $events.pipe(
+      ofType(OverrideSupersededEvent),
+      tap(event => {
+        this.logger.log(`Saga iniciada para evento de dominio OverrideSuperseded: ${event.aggregateId}`);
+      }),
+      map(() => null)
+    );
+  };
+
+  @Saga()
+  onOverrideExpired = ($events: Observable<OverrideExpiredEvent>) => {
+    return $events.pipe(
+      ofType(OverrideExpiredEvent),
+      tap(event => {
+        this.logger.log(`Saga iniciada para evento de dominio OverrideExpired: ${event.aggregateId}`);
+      }),
+      map(() => null)
+    );
+  };
 
   @LogExecutionTime({
     layer: 'saga',

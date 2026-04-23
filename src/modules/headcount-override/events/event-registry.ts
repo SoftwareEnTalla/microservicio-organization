@@ -33,6 +33,10 @@ import { BaseEvent } from './base.event';
 import { HeadcountOverrideCreatedEvent } from './headcountoverridecreated.event';
 import { HeadcountOverrideUpdatedEvent } from './headcountoverrideupdated.event';
 import { HeadcountOverrideDeletedEvent } from './headcountoverridedeleted.event';
+import { OverrideAppliedEvent } from './overrideapplied.event';
+import { OverrideReleasedEvent } from './overridereleased.event';
+import { OverrideSupersededEvent } from './overridesuperseded.event';
+import { OverrideExpiredEvent } from './overrideexpired.event';
 
 export type RegisteredEventClass<T extends BaseEvent = BaseEvent> = new (
   aggregateId: string,
@@ -92,7 +96,10 @@ export const EVENT_DEFINITIONS: Record<string, RegisteredEventDefinition> = {
   'headcount-override-created': createEventDefinition('headcount-override-created', HeadcountOverrideCreatedEvent, EVENT_DEFINITION_OVERRIDES['headcount-override-created']),
   'headcount-override-updated': createEventDefinition('headcount-override-updated', HeadcountOverrideUpdatedEvent, EVENT_DEFINITION_OVERRIDES['headcount-override-updated']),
   'headcount-override-deleted': createEventDefinition('headcount-override-deleted', HeadcountOverrideDeletedEvent, EVENT_DEFINITION_OVERRIDES['headcount-override-deleted']),
-
+  'override-applied': createEventDefinition('override-applied', OverrideAppliedEvent, EVENT_DEFINITION_OVERRIDES['override-applied']),
+  'override-released': createEventDefinition('override-released', OverrideReleasedEvent, EVENT_DEFINITION_OVERRIDES['override-released']),
+  'override-superseded': createEventDefinition('override-superseded', OverrideSupersededEvent, EVENT_DEFINITION_OVERRIDES['override-superseded']),
+  'override-expired': createEventDefinition('override-expired', OverrideExpiredEvent, EVENT_DEFINITION_OVERRIDES['override-expired']),
 };
 
 export const EVENT_REGISTRY: Record<string, RegisteredEventClass> = Object.fromEntries(

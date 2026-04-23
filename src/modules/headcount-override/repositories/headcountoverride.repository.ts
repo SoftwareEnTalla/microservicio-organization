@@ -272,15 +272,19 @@ import { logger } from '@core/logs/logger';
       .registerClient(HeadcountOverrideRepository.name)
       .get(HeadcountOverrideRepository.name),
     })
-    async findOne(where?: Record<string, any>): Promise<HeadcountOverride | null> {
-      const tmp: FindOptionsWhere<HeadcountOverride> = where as FindOptionsWhere<HeadcountOverride>;
-      logger.info('Ready to findOneBy HeadcountOverride on repository with conditions:', tmp);
-      // Si 'where' es undefined o null, puedes manejarlo según tu lógica
-      if (!where) {
+        async findOne(options?: Record<string, any>): Promise<HeadcountOverride | null> {
+      if (!options || Object.keys(options).length === 0) {
         logger.warn('No conditions provided for finding HeadcountOverride.');
-        return null; // O maneja el caso como prefieras
+        return null;
       }
-      logger.info('Ready to findOneBy HeadcountOverride on repository:',tmp);
+      // Soporta tanto 'where plano' como FindOneOptions ({ where, relations, order, select })
+      const isFindOneOptions = 'where' in options || 'relations' in options || 'order' in options || 'select' in options;
+      if (isFindOneOptions) {
+        logger.info('Ready to findOne (FindOneOptions) HeadcountOverride:', options);
+        return this.repository.findOne(options as any);
+      }
+      const tmp: FindOptionsWhere<HeadcountOverride> = options as FindOptionsWhere<HeadcountOverride>;
+      logger.info('Ready to findOneBy HeadcountOverride on repository:', tmp);
       return this.repository.findOneBy(tmp);
     }
 

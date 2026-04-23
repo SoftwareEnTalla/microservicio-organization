@@ -33,6 +33,11 @@ import { BaseEvent } from './base.event';
 import { OrganizationNodeCreatedEvent } from './organizationnodecreated.event';
 import { OrganizationNodeUpdatedEvent } from './organizationnodeupdated.event';
 import { OrganizationNodeDeletedEvent } from './organizationnodedeleted.event';
+import { OrganizationNodeMovedEvent } from './organizationnodemoved.event';
+import { TargetHeadcountUpdatedEvent } from './targetheadcountupdated.event';
+import { ActualHeadcountUpdatedEvent } from './actualheadcountupdated.event';
+import { HeadcountOverflowDetectedEvent } from './headcountoverflowdetected.event';
+import { AggregateRefreshedEvent } from './aggregaterefreshed.event';
 
 export type RegisteredEventClass<T extends BaseEvent = BaseEvent> = new (
   aggregateId: string,
@@ -112,7 +117,11 @@ export const EVENT_DEFINITIONS: Record<string, RegisteredEventDefinition> = {
   'organization-node-created': createEventDefinition('organization-node-created', OrganizationNodeCreatedEvent, EVENT_DEFINITION_OVERRIDES['organization-node-created']),
   'organization-node-updated': createEventDefinition('organization-node-updated', OrganizationNodeUpdatedEvent, EVENT_DEFINITION_OVERRIDES['organization-node-updated']),
   'organization-node-deleted': createEventDefinition('organization-node-deleted', OrganizationNodeDeletedEvent, EVENT_DEFINITION_OVERRIDES['organization-node-deleted']),
-
+  'organization-node-moved': createEventDefinition('organization-node-moved', OrganizationNodeMovedEvent, EVENT_DEFINITION_OVERRIDES['organization-node-moved']),
+  'target-headcount-updated': createEventDefinition('target-headcount-updated', TargetHeadcountUpdatedEvent, EVENT_DEFINITION_OVERRIDES['target-headcount-updated']),
+  'actual-headcount-updated': createEventDefinition('actual-headcount-updated', ActualHeadcountUpdatedEvent, EVENT_DEFINITION_OVERRIDES['actual-headcount-updated']),
+  'headcount-overflow-detected': createEventDefinition('headcount-overflow-detected', HeadcountOverflowDetectedEvent, EVENT_DEFINITION_OVERRIDES['headcount-overflow-detected']),
+  'aggregate-refreshed': createEventDefinition('aggregate-refreshed', AggregateRefreshedEvent, EVENT_DEFINITION_OVERRIDES['aggregate-refreshed']),
 };
 
 export const EVENT_REGISTRY: Record<string, RegisteredEventClass> = Object.fromEntries(

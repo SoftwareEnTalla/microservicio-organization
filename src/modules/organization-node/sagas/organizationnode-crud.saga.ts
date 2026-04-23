@@ -36,7 +36,11 @@ import {
   OrganizationNodeCreatedEvent,
   OrganizationNodeUpdatedEvent,
   OrganizationNodeDeletedEvent,
-
+  OrganizationNodeMovedEvent,
+  TargetHeadcountUpdatedEvent,
+  ActualHeadcountUpdatedEvent,
+  HeadcountOverflowDetectedEvent,
+  AggregateRefreshedEvent,
 } from '../events/exporting.event';
 import {
   SagaOrganizationNodeFailedEvent
@@ -100,6 +104,60 @@ export class OrganizationNodeCrudSaga {
     );
   };
 
+  @Saga()
+  onOrganizationNodeMoved = ($events: Observable<OrganizationNodeMovedEvent>) => {
+    return $events.pipe(
+      ofType(OrganizationNodeMovedEvent),
+      tap(event => {
+        this.logger.log(`Saga iniciada para evento de dominio OrganizationNodeMoved: ${event.aggregateId}`);
+      }),
+      map(() => null)
+    );
+  };
+
+  @Saga()
+  onTargetHeadcountUpdated = ($events: Observable<TargetHeadcountUpdatedEvent>) => {
+    return $events.pipe(
+      ofType(TargetHeadcountUpdatedEvent),
+      tap(event => {
+        this.logger.log(`Saga iniciada para evento de dominio TargetHeadcountUpdated: ${event.aggregateId}`);
+      }),
+      map(() => null)
+    );
+  };
+
+  @Saga()
+  onActualHeadcountUpdated = ($events: Observable<ActualHeadcountUpdatedEvent>) => {
+    return $events.pipe(
+      ofType(ActualHeadcountUpdatedEvent),
+      tap(event => {
+        this.logger.log(`Saga iniciada para evento de dominio ActualHeadcountUpdated: ${event.aggregateId}`);
+      }),
+      map(() => null)
+    );
+  };
+
+  @Saga()
+  onHeadcountOverflowDetected = ($events: Observable<HeadcountOverflowDetectedEvent>) => {
+    return $events.pipe(
+      ofType(HeadcountOverflowDetectedEvent),
+      tap(event => {
+        this.logger.log(`Saga iniciada para evento de dominio HeadcountOverflowDetected: ${event.aggregateId}`);
+      }),
+      map(() => null)
+    );
+  };
+
+  @Saga()
+  onAggregateRefreshed = ($events: Observable<AggregateRefreshedEvent>) => {
+    return $events.pipe(
+      ofType(AggregateRefreshedEvent),
+      tap(event => {
+        this.logger.log(`Saga iniciada para evento de dominio AggregateRefreshed: ${event.aggregateId}`);
+      }),
+      map(() => null)
+    );
+  };
 
   @LogExecutionTime({
     layer: 'saga',

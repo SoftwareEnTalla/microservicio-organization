@@ -30,7 +30,11 @@
 export * from "./organizationnodedeleted.event"; 
 export * from "./organizationnodecreated.event";
 export * from "./organizationnodeupdated.event";
-
+export * from "./organizationnodemoved.event";
+export * from "./targetheadcountupdated.event";
+export * from "./actualheadcountupdated.event";
+export * from "./headcountoverflowdetected.event";
+export * from "./aggregaterefreshed.event";
 export * from "./event-registry";
 export * from "./base.event";
 export * from "./organizationnode-failed.event";

@@ -51,7 +51,11 @@ import { KafkaEventPublisher } from "../shared/adapters/kafka-event-publisher";
 import { ModuleRef } from "@nestjs/core";
 import { OrganizationNodeQueryService } from "./organizationnodequery.service";
 import { BaseEvent } from "../events/base.event";
-
+import { OrganizationNodeMovedEvent } from '../events/organizationnodemoved.event';
+import { TargetHeadcountUpdatedEvent } from '../events/targetheadcountupdated.event';
+import { ActualHeadcountUpdatedEvent } from '../events/actualheadcountupdated.event';
+import { HeadcountOverflowDetectedEvent } from '../events/headcountoverflowdetected.event';
+import { AggregateRefreshedEvent } from '../events/aggregaterefreshed.event';
 
 @Injectable()
 export class OrganizationNodeCommandService implements OnModuleInit {

@@ -53,7 +53,11 @@ import { IEventHandler, EventsHandler } from '@nestjs/cqrs';
 import { OrganizationNodeCreatedEvent } from '../events/organizationnodecreated.event';
 import { OrganizationNodeUpdatedEvent } from '../events/organizationnodeupdated.event';
 import { OrganizationNodeDeletedEvent } from '../events/organizationnodedeleted.event';
-
+import { OrganizationNodeMovedEvent } from "../events/organizationnodemoved.event";
+import { TargetHeadcountUpdatedEvent } from "../events/targetheadcountupdated.event";
+import { ActualHeadcountUpdatedEvent } from "../events/actualheadcountupdated.event";
+import { HeadcountOverflowDetectedEvent } from "../events/headcountoverflowdetected.event";
+import { AggregateRefreshedEvent } from "../events/aggregaterefreshed.event";
 
 //Enfoque Event Sourcing
 import { CommandBus, EventBus } from '@nestjs/cqrs';
@@ -66,7 +70,7 @@ import { EventSourcingHelper } from '../shared/decorators/event-sourcing.helper'
 import { EventSourcingConfigOptions } from '../shared/decorators/event-sourcing.decorator';
 
 
-@EventsHandler(OrganizationNodeCreatedEvent, OrganizationNodeUpdatedEvent, OrganizationNodeDeletedEvent)
+@EventsHandler(OrganizationNodeCreatedEvent, OrganizationNodeUpdatedEvent, OrganizationNodeDeletedEvent, OrganizationNodeMovedEvent, TargetHeadcountUpdatedEvent, ActualHeadcountUpdatedEvent, HeadcountOverflowDetectedEvent, AggregateRefreshedEvent)
 @Injectable()
 export class OrganizationNodeCommandRepository implements IEventHandler<BaseEvent>{
 
@@ -158,7 +162,16 @@ export class OrganizationNodeCommandRepository implements IEventHandler<BaseEven
         return await this.onOrganizationNodeUpdated(event);
       case 'OrganizationNodeDeletedEvent':
         return await this.onOrganizationNodeDeleted(event);
-
+      case 'OrganizationNodeMovedEvent':
+        return await this.onOrganizationNodeMoved(event);
+      case 'TargetHeadcountUpdatedEvent':
+        return await this.onTargetHeadcountUpdated(event);
+      case 'ActualHeadcountUpdatedEvent':
+        return await this.onActualHeadcountUpdated(event);
+      case 'HeadcountOverflowDetectedEvent':
+        return await this.onHeadcountOverflowDetected(event);
+      case 'AggregateRefreshedEvent':
+        return await this.onAggregateRefreshed(event);
     }
     return false;
   }
@@ -252,6 +265,75 @@ export class OrganizationNodeCommandRepository implements IEventHandler<BaseEven
     return await this.repository.delete(event.aggregateId);
   }
 
+  private async onOrganizationNodeMoved(event: OrganizationNodeMovedEvent) {
+    logger.info('Ready to handle onOrganizationNodeMoved event on repository:', event);
+    const payloadInstance = (event as any).payload?.instance;
+    if (payloadInstance) {
+      const projectedEntity = this.repository.create({
+        ...(payloadInstance as any),
+        id: event.aggregateId,
+        type: 'organization-node'
+      } as Partial<OrganizationNode>);
+      return await this.repository.save(projectedEntity as OrganizationNode);
+    }
+    return true;
+  }
+
+  private async onTargetHeadcountUpdated(event: TargetHeadcountUpdatedEvent) {
+    logger.info('Ready to handle onTargetHeadcountUpdated event on repository:', event);
+    const payloadInstance = (event as any).payload?.instance;
+    if (payloadInstance) {
+      const projectedEntity = this.repository.create({
+        ...(payloadInstance as any),
+        id: event.aggregateId,
+        type: 'organization-node'
+      } as Partial<OrganizationNode>);
+      return await this.repository.save(projectedEntity as OrganizationNode);
+    }
+    return true;
+  }
+
+  private async onActualHeadcountUpdated(event: ActualHeadcountUpdatedEvent) {
+    logger.info('Ready to handle onActualHeadcountUpdated event on repository:', event);
+    const payloadInstance = (event as any).payload?.instance;
+    if (payloadInstance) {
+      const projectedEntity = this.repository.create({
+        ...(payloadInstance as any),
+        id: event.aggregateId,
+        type: 'organization-node'
+      } as Partial<OrganizationNode>);
+      return await this.repository.save(projectedEntity as OrganizationNode);
+    }
+    return true;
+  }
+
+  private async onHeadcountOverflowDetected(event: HeadcountOverflowDetectedEvent) {
+    logger.info('Ready to handle onHeadcountOverflowDetected event on repository:', event);
+    const payloadInstance = (event as any).payload?.instance;
+    if (payloadInstance) {
+      const projectedEntity = this.repository.create({
+        ...(payloadInstance as any),
+        id: event.aggregateId,
+        type: 'organization-node'
+      } as Partial<OrganizationNode>);
+      return await this.repository.save(projectedEntity as OrganizationNode);
+    }
+    return true;
+  }
+
+  private async onAggregateRefreshed(event: AggregateRefreshedEvent) {
+    logger.info('Ready to handle onAggregateRefreshed event on repository:', event);
+    const payloadInstance = (event as any).payload?.instance;
+    if (payloadInstance) {
+      const projectedEntity = this.repository.create({
+        ...(payloadInstance as any),
+        id: event.aggregateId,
+        type: 'organization-node'
+      } as Partial<OrganizationNode>);
+      return await this.repository.save(projectedEntity as OrganizationNode);
+    }
+    return true;
+  }
 
 
   // ----------------------------

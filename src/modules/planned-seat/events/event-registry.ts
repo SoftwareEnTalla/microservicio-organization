@@ -33,6 +33,9 @@ import { BaseEvent } from './base.event';
 import { PlannedSeatCreatedEvent } from './plannedseatcreated.event';
 import { PlannedSeatUpdatedEvent } from './plannedseatupdated.event';
 import { PlannedSeatDeletedEvent } from './plannedseatdeleted.event';
+import { SeatVacancyFilledEvent } from './seatvacancyfilled.event';
+import { SeatVacancyOpenedEvent } from './seatvacancyopened.event';
+import { SeatOverassignedEvent } from './seatoverassigned.event';
 
 export type RegisteredEventClass<T extends BaseEvent = BaseEvent> = new (
   aggregateId: string,
@@ -102,7 +105,9 @@ export const EVENT_DEFINITIONS: Record<string, RegisteredEventDefinition> = {
   'planned-seat-created': createEventDefinition('planned-seat-created', PlannedSeatCreatedEvent, EVENT_DEFINITION_OVERRIDES['planned-seat-created']),
   'planned-seat-updated': createEventDefinition('planned-seat-updated', PlannedSeatUpdatedEvent, EVENT_DEFINITION_OVERRIDES['planned-seat-updated']),
   'planned-seat-deleted': createEventDefinition('planned-seat-deleted', PlannedSeatDeletedEvent, EVENT_DEFINITION_OVERRIDES['planned-seat-deleted']),
-
+  'seat-vacancy-filled': createEventDefinition('seat-vacancy-filled', SeatVacancyFilledEvent, EVENT_DEFINITION_OVERRIDES['seat-vacancy-filled']),
+  'seat-vacancy-opened': createEventDefinition('seat-vacancy-opened', SeatVacancyOpenedEvent, EVENT_DEFINITION_OVERRIDES['seat-vacancy-opened']),
+  'seat-overassigned': createEventDefinition('seat-overassigned', SeatOverassignedEvent, EVENT_DEFINITION_OVERRIDES['seat-overassigned']),
 };
 
 export const EVENT_REGISTRY: Record<string, RegisteredEventClass> = Object.fromEntries(

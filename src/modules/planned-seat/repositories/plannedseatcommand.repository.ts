@@ -53,7 +53,9 @@ import { IEventHandler, EventsHandler } from '@nestjs/cqrs';
 import { PlannedSeatCreatedEvent } from '../events/plannedseatcreated.event';
 import { PlannedSeatUpdatedEvent } from '../events/plannedseatupdated.event';
 import { PlannedSeatDeletedEvent } from '../events/plannedseatdeleted.event';
-
+import { SeatVacancyFilledEvent } from "../events/seatvacancyfilled.event";
+import { SeatVacancyOpenedEvent } from "../events/seatvacancyopened.event";
+import { SeatOverassignedEvent } from "../events/seatoverassigned.event";
 
 //Enfoque Event Sourcing
 import { CommandBus, EventBus } from '@nestjs/cqrs';
@@ -66,7 +68,7 @@ import { EventSourcingHelper } from '../shared/decorators/event-sourcing.helper'
 import { EventSourcingConfigOptions } from '../shared/decorators/event-sourcing.decorator';
 
 
-@EventsHandler(PlannedSeatCreatedEvent, PlannedSeatUpdatedEvent, PlannedSeatDeletedEvent)
+@EventsHandler(PlannedSeatCreatedEvent, PlannedSeatUpdatedEvent, PlannedSeatDeletedEvent, SeatVacancyFilledEvent, SeatVacancyOpenedEvent, SeatOverassignedEvent)
 @Injectable()
 export class PlannedSeatCommandRepository implements IEventHandler<BaseEvent>{
 
@@ -158,7 +160,12 @@ export class PlannedSeatCommandRepository implements IEventHandler<BaseEvent>{
         return await this.onPlannedSeatUpdated(event);
       case 'PlannedSeatDeletedEvent':
         return await this.onPlannedSeatDeleted(event);
-
+      case 'SeatVacancyFilledEvent':
+        return await this.onSeatVacancyFilled(event);
+      case 'SeatVacancyOpenedEvent':
+        return await this.onSeatVacancyOpened(event);
+      case 'SeatOverassignedEvent':
+        return await this.onSeatOverassigned(event);
     }
     return false;
   }
@@ -252,6 +259,47 @@ export class PlannedSeatCommandRepository implements IEventHandler<BaseEvent>{
     return await this.repository.delete(event.aggregateId);
   }
 
+  private async onSeatVacancyFilled(event: SeatVacancyFilledEvent) {
+    logger.info('Ready to handle onSeatVacancyFilled event on repository:', event);
+    const payloadInstance = (event as any).payload?.instance;
+    if (payloadInstance) {
+      const projectedEntity = this.repository.create({
+        ...(payloadInstance as any),
+        id: event.aggregateId,
+        type: 'planned-seat'
+      } as Partial<PlannedSeat>);
+      return await this.repository.save(projectedEntity as PlannedSeat);
+    }
+    return true;
+  }
+
+  private async onSeatVacancyOpened(event: SeatVacancyOpenedEvent) {
+    logger.info('Ready to handle onSeatVacancyOpened event on repository:', event);
+    const payloadInstance = (event as any).payload?.instance;
+    if (payloadInstance) {
+      const projectedEntity = this.repository.create({
+        ...(payloadInstance as any),
+        id: event.aggregateId,
+        type: 'planned-seat'
+      } as Partial<PlannedSeat>);
+      return await this.repository.save(projectedEntity as PlannedSeat);
+    }
+    return true;
+  }
+
+  private async onSeatOverassigned(event: SeatOverassignedEvent) {
+    logger.info('Ready to handle onSeatOverassigned event on repository:', event);
+    const payloadInstance = (event as any).payload?.instance;
+    if (payloadInstance) {
+      const projectedEntity = this.repository.create({
+        ...(payloadInstance as any),
+        id: event.aggregateId,
+        type: 'planned-seat'
+      } as Partial<PlannedSeat>);
+      return await this.repository.save(projectedEntity as PlannedSeat);
+    }
+    return true;
+  }
 
 
   // ----------------------------

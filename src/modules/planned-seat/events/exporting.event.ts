@@ -30,7 +30,9 @@
 export * from "./plannedseatdeleted.event"; 
 export * from "./plannedseatcreated.event";
 export * from "./plannedseatupdated.event";
-
+export * from "./seatvacancyfilled.event";
+export * from "./seatvacancyopened.event";
+export * from "./seatoverassigned.event";
 export * from "./event-registry";
 export * from "./base.event";
 export * from "./plannedseat-failed.event";

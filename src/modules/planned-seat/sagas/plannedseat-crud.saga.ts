@@ -36,7 +36,9 @@ import {
   PlannedSeatCreatedEvent,
   PlannedSeatUpdatedEvent,
   PlannedSeatDeletedEvent,
-
+  SeatVacancyFilledEvent,
+  SeatVacancyOpenedEvent,
+  SeatOverassignedEvent,
 } from '../events/exporting.event';
 import {
   SagaPlannedSeatFailedEvent
@@ -100,6 +102,38 @@ export class PlannedSeatCrudSaga {
     );
   };
 
+  @Saga()
+  onSeatVacancyFilled = ($events: Observable<SeatVacancyFilledEvent>) => {
+    return $events.pipe(
+      ofType(SeatVacancyFilledEvent),
+      tap(event => {
+        this.logger.log(`Saga iniciada para evento de dominio SeatVacancyFilled: ${event.aggregateId}`);
+      }),
+      map(() => null)
+    );
+  };
+
+  @Saga()
+  onSeatVacancyOpened = ($events: Observable<SeatVacancyOpenedEvent>) => {
+    return $events.pipe(
+      ofType(SeatVacancyOpenedEvent),
+      tap(event => {
+        this.logger.log(`Saga iniciada para evento de dominio SeatVacancyOpened: ${event.aggregateId}`);
+      }),
+      map(() => null)
+    );
+  };
+
+  @Saga()
+  onSeatOverassigned = ($events: Observable<SeatOverassignedEvent>) => {
+    return $events.pipe(
+      ofType(SeatOverassignedEvent),
+      tap(event => {
+        this.logger.log(`Saga iniciada para evento de dominio SeatOverassigned: ${event.aggregateId}`);
+      }),
+      map(() => null)
+    );
+  };
 
   @LogExecutionTime({
     layer: 'saga',

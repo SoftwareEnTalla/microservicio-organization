@@ -51,7 +51,9 @@ import { KafkaEventPublisher } from "../shared/adapters/kafka-event-publisher";
 import { ModuleRef } from "@nestjs/core";
 import { PlannedSeatQueryService } from "./plannedseatquery.service";
 import { BaseEvent } from "../events/base.event";
-
+import { SeatVacancyFilledEvent } from '../events/seatvacancyfilled.event';
+import { SeatVacancyOpenedEvent } from '../events/seatvacancyopened.event';
+import { SeatOverassignedEvent } from '../events/seatoverassigned.event';
 
 @Injectable()
 export class PlannedSeatCommandService implements OnModuleInit {

@@ -1,6 +1,6 @@
 # ORGANIZATION Microservice
 
-**Creation Date**: 2026-04-21
+**Creation Date**: 2026-04-22
 
 **Author**: Ing. Persy Morell Guerra e Ing. Dailyn García Dominguez (SoftwarEnTalla CEO)
 
@@ -32,6 +32,7 @@
 |____interfaces
 |____migrations
 |____modules
+| |____catalog-client
 | |____catalog-sync-log
 | | |____aggregates
 | | |____commands

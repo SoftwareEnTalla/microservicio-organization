@@ -33,6 +33,8 @@ import { BaseEvent } from './base.event';
 import { OrganizationNodeAttributeCreatedEvent } from './organizationnodeattributecreated.event';
 import { OrganizationNodeAttributeUpdatedEvent } from './organizationnodeattributeupdated.event';
 import { OrganizationNodeAttributeDeletedEvent } from './organizationnodeattributedeleted.event';
+import { NodeAttributeUpsertedEvent } from './nodeattributeupserted.event';
+import { NodeAttributeDeletedEvent } from './nodeattributedeleted.event';
 
 export type RegisteredEventClass<T extends BaseEvent = BaseEvent> = new (
   aggregateId: string,
@@ -82,7 +84,8 @@ export const EVENT_DEFINITIONS: Record<string, RegisteredEventDefinition> = {
   'organization-node-attribute-created': createEventDefinition('organization-node-attribute-created', OrganizationNodeAttributeCreatedEvent, EVENT_DEFINITION_OVERRIDES['organization-node-attribute-created']),
   'organization-node-attribute-updated': createEventDefinition('organization-node-attribute-updated', OrganizationNodeAttributeUpdatedEvent, EVENT_DEFINITION_OVERRIDES['organization-node-attribute-updated']),
   'organization-node-attribute-deleted': createEventDefinition('organization-node-attribute-deleted', OrganizationNodeAttributeDeletedEvent, EVENT_DEFINITION_OVERRIDES['organization-node-attribute-deleted']),
-
+  'node-attribute-upserted': createEventDefinition('node-attribute-upserted', NodeAttributeUpsertedEvent, EVENT_DEFINITION_OVERRIDES['node-attribute-upserted']),
+  'node-attribute-deleted': createEventDefinition('node-attribute-deleted', NodeAttributeDeletedEvent, EVENT_DEFINITION_OVERRIDES['node-attribute-deleted']),
 };
 
 export const EVENT_REGISTRY: Record<string, RegisteredEventClass> = Object.fromEntries(

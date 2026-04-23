@@ -29,15 +29,15 @@
  */
 
 
-import { CreateOrganizationNodeAttributeDto } from '../dtos/all-dto';
+
 import { OrganizationNodeAttribute } from '../entities/organization-node-attribute.entity';
 import { BaseEvent, PayloadEvent } from './base.event'; 
 import { v4 as uuidv4 } from "uuid";
 
-export class OrganizationNodeAttributeCreatedEvent extends BaseEvent {
+export class NodeAttributeUpsertedEvent extends BaseEvent {
   constructor(
     public readonly aggregateId: string,
-    public readonly payload: PayloadEvent<CreateOrganizationNodeAttributeDto|OrganizationNodeAttribute>
+    public readonly payload: PayloadEvent<any|OrganizationNodeAttribute>
   ) {
     super(aggregateId);
   }
@@ -46,11 +46,11 @@ export class OrganizationNodeAttributeCreatedEvent extends BaseEvent {
          // Método estático para construcción consistente del evento
         static create(
           instanceId: string,
-          instance: CreateOrganizationNodeAttributeDto|OrganizationNodeAttribute,
+          instance: any|OrganizationNodeAttribute,
           userId: string,
-          correlationId: string=uuidv4()
-        ): OrganizationNodeAttributeCreatedEvent {
-          return new OrganizationNodeAttributeCreatedEvent(instanceId, {
+          correlationId?: string
+        ): NodeAttributeUpsertedEvent {
+          return new NodeAttributeUpsertedEvent(instanceId, {
             instance: instance,
             metadata: {
               initiatedBy: userId,

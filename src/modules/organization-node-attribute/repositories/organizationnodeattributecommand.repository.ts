@@ -53,7 +53,8 @@ import { IEventHandler, EventsHandler } from '@nestjs/cqrs';
 import { OrganizationNodeAttributeCreatedEvent } from '../events/organizationnodeattributecreated.event';
 import { OrganizationNodeAttributeUpdatedEvent } from '../events/organizationnodeattributeupdated.event';
 import { OrganizationNodeAttributeDeletedEvent } from '../events/organizationnodeattributedeleted.event';
-
+import { NodeAttributeUpsertedEvent } from "../events/nodeattributeupserted.event";
+import { NodeAttributeDeletedEvent } from "../events/nodeattributedeleted.event";
 
 //Enfoque Event Sourcing
 import { CommandBus, EventBus } from '@nestjs/cqrs';
@@ -66,7 +67,7 @@ import { EventSourcingHelper } from '../shared/decorators/event-sourcing.helper'
 import { EventSourcingConfigOptions } from '../shared/decorators/event-sourcing.decorator';
 
 
-@EventsHandler(OrganizationNodeAttributeCreatedEvent, OrganizationNodeAttributeUpdatedEvent, OrganizationNodeAttributeDeletedEvent)
+@EventsHandler(OrganizationNodeAttributeCreatedEvent, OrganizationNodeAttributeUpdatedEvent, OrganizationNodeAttributeDeletedEvent, NodeAttributeUpsertedEvent, NodeAttributeDeletedEvent)
 @Injectable()
 export class OrganizationNodeAttributeCommandRepository implements IEventHandler<BaseEvent>{
 
@@ -158,7 +159,10 @@ export class OrganizationNodeAttributeCommandRepository implements IEventHandler
         return await this.onOrganizationNodeAttributeUpdated(event);
       case 'OrganizationNodeAttributeDeletedEvent':
         return await this.onOrganizationNodeAttributeDeleted(event);
-
+      case 'NodeAttributeUpsertedEvent':
+        return await this.onNodeAttributeUpserted(event);
+      case 'NodeAttributeDeletedEvent':
+        return await this.onNodeAttributeDeleted(event);
     }
     return false;
   }
@@ -252,6 +256,33 @@ export class OrganizationNodeAttributeCommandRepository implements IEventHandler
     return await this.repository.delete(event.aggregateId);
   }
 
+  private async onNodeAttributeUpserted(event: NodeAttributeUpsertedEvent) {
+    logger.info('Ready to handle onNodeAttributeUpserted event on repository:', event);
+    const payloadInstance = (event as any).payload?.instance;
+    if (payloadInstance) {
+      const projectedEntity = this.repository.create({
+        ...(payloadInstance as any),
+        id: event.aggregateId,
+        type: 'organization-node-attribute'
+      } as Partial<OrganizationNodeAttribute>);
+      return await this.repository.save(projectedEntity as OrganizationNodeAttribute);
+    }
+    return true;
+  }
+
+  private async onNodeAttributeDeleted(event: NodeAttributeDeletedEvent) {
+    logger.info('Ready to handle onNodeAttributeDeleted event on repository:', event);
+    const payloadInstance = (event as any).payload?.instance;
+    if (payloadInstance) {
+      const projectedEntity = this.repository.create({
+        ...(payloadInstance as any),
+        id: event.aggregateId,
+        type: 'organization-node-attribute'
+      } as Partial<OrganizationNodeAttribute>);
+      return await this.repository.save(projectedEntity as OrganizationNodeAttribute);
+    }
+    return true;
+  }
 
 
   // ----------------------------

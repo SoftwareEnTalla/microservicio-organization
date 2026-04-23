@@ -30,7 +30,8 @@
 export * from "./organizationnodeattributedeleted.event"; 
 export * from "./organizationnodeattributecreated.event";
 export * from "./organizationnodeattributeupdated.event";
-
+export * from "./nodeattributeupserted.event";
+export * from "./nodeattributedeleted.event";
 export * from "./event-registry";
 export * from "./base.event";
 export * from "./organizationnodeattribute-failed.event";

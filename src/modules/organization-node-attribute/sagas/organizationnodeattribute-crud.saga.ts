@@ -36,7 +36,8 @@ import {
   OrganizationNodeAttributeCreatedEvent,
   OrganizationNodeAttributeUpdatedEvent,
   OrganizationNodeAttributeDeletedEvent,
-
+  NodeAttributeUpsertedEvent,
+  NodeAttributeDeletedEvent,
 } from '../events/exporting.event';
 import {
   SagaOrganizationNodeAttributeFailedEvent
@@ -100,6 +101,27 @@ export class OrganizationNodeAttributeCrudSaga {
     );
   };
 
+  @Saga()
+  onNodeAttributeUpserted = ($events: Observable<NodeAttributeUpsertedEvent>) => {
+    return $events.pipe(
+      ofType(NodeAttributeUpsertedEvent),
+      tap(event => {
+        this.logger.log(`Saga iniciada para evento de dominio NodeAttributeUpserted: ${event.aggregateId}`);
+      }),
+      map(() => null)
+    );
+  };
+
+  @Saga()
+  onNodeAttributeDeleted = ($events: Observable<NodeAttributeDeletedEvent>) => {
+    return $events.pipe(
+      ofType(NodeAttributeDeletedEvent),
+      tap(event => {
+        this.logger.log(`Saga iniciada para evento de dominio NodeAttributeDeleted: ${event.aggregateId}`);
+      }),
+      map(() => null)
+    );
+  };
 
   @LogExecutionTime({
     layer: 'saga',

@@ -51,7 +51,8 @@ import { KafkaEventPublisher } from "../shared/adapters/kafka-event-publisher";
 import { ModuleRef } from "@nestjs/core";
 import { OrganizationNodeAttributeQueryService } from "./organizationnodeattributequery.service";
 import { BaseEvent } from "../events/base.event";
-
+import { NodeAttributeUpsertedEvent } from '../events/nodeattributeupserted.event';
+import { NodeAttributeDeletedEvent } from '../events/nodeattributedeleted.event';
 
 @Injectable()
 export class OrganizationNodeAttributeCommandService implements OnModuleInit {

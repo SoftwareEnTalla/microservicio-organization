@@ -34,7 +34,7 @@ import { Organization } from '../entities/organization.entity';
 import { BaseEvent, PayloadEvent } from './base.event'; 
 import { v4 as uuidv4 } from "uuid";
 
-export class OrganizationCreatedEvent extends BaseEvent {
+export class OrganizationRootCreatedEvent extends BaseEvent {
   constructor(
     public readonly aggregateId: string,
     public readonly payload: PayloadEvent<CreateOrganizationDto|Organization>
@@ -49,8 +49,8 @@ export class OrganizationCreatedEvent extends BaseEvent {
           instance: CreateOrganizationDto|Organization,
           userId: string,
           correlationId: string=uuidv4()
-        ): OrganizationCreatedEvent {
-          return new OrganizationCreatedEvent(instanceId, {
+        ): OrganizationRootCreatedEvent {
+          return new OrganizationRootCreatedEvent(instanceId, {
             instance: instance,
             metadata: {
               initiatedBy: userId,

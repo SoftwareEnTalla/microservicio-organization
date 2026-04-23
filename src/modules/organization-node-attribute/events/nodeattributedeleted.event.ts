@@ -34,7 +34,7 @@ import { OrganizationNodeAttribute } from '../entities/organization-node-attribu
 import { BaseEvent, PayloadEvent } from './base.event'; 
 import { v4 as uuidv4 } from "uuid";
 
-export class OrganizationNodeAttributeDeletedEvent extends BaseEvent {
+export class NodeAttributeDeletedEvent extends BaseEvent {
   constructor(
     public readonly aggregateId: string,
     public readonly payload: PayloadEvent<DeleteOrganizationNodeAttributeDto|OrganizationNodeAttribute>
@@ -49,8 +49,8 @@ export class OrganizationNodeAttributeDeletedEvent extends BaseEvent {
           instance: DeleteOrganizationNodeAttributeDto|OrganizationNodeAttribute,
           userId: string,
           correlationId?: string
-        ): OrganizationNodeAttributeDeletedEvent {
-          return new OrganizationNodeAttributeDeletedEvent(instanceId, {
+        ): NodeAttributeDeletedEvent {
+          return new NodeAttributeDeletedEvent(instanceId, {
             instance: instance,
             metadata: {
               initiatedBy: userId,

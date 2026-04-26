@@ -30,13 +30,11 @@
 
 
 import { Module } from "@nestjs/common";
-import { HeadcountOverrideStatusCommandController } from "../controllers/headcountoverridestatuscommand.controller";
 import { HeadcountOverrideStatusLoggingInterceptor } from "../interceptors/headcountoverridestatus.logging.interceptor";
 import { CommandBus, EventBus, UnhandledExceptionBus } from "@nestjs/cqrs";
 import { HeadcountOverrideStatusAuthGuard } from "../guards/headcountoverridestatusauthguard.guard";
 
 @Module({
-  controllers: [HeadcountOverrideStatusCommandController],
   providers: [
     HeadcountOverrideStatusAuthGuard,
     HeadcountOverrideStatusLoggingInterceptor,

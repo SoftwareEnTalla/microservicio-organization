@@ -30,13 +30,11 @@
 
 
 import { Module } from "@nestjs/common";
-import { NodeAssignmentActionCommandController } from "../controllers/nodeassignmentactioncommand.controller";
 import { NodeAssignmentActionLoggingInterceptor } from "../interceptors/nodeassignmentaction.logging.interceptor";
 import { CommandBus, EventBus, UnhandledExceptionBus } from "@nestjs/cqrs";
 import { NodeAssignmentActionAuthGuard } from "../guards/nodeassignmentactionauthguard.guard";
 
 @Module({
-  controllers: [NodeAssignmentActionCommandController],
   providers: [
     NodeAssignmentActionAuthGuard,
     NodeAssignmentActionLoggingInterceptor,

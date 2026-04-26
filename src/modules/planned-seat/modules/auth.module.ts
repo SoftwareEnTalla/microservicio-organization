@@ -30,13 +30,11 @@
 
 
 import { Module } from "@nestjs/common";
-import { PlannedSeatCommandController } from "../controllers/plannedseatcommand.controller";
 import { PlannedSeatLoggingInterceptor } from "../interceptors/plannedseat.logging.interceptor";
 import { CommandBus, EventBus, UnhandledExceptionBus } from "@nestjs/cqrs";
 import { PlannedSeatAuthGuard } from "../guards/plannedseatauthguard.guard";
 
 @Module({
-  controllers: [PlannedSeatCommandController],
   providers: [
     PlannedSeatAuthGuard,
     PlannedSeatLoggingInterceptor,

@@ -30,13 +30,11 @@
 
 
 import { Module } from "@nestjs/common";
-import { SeniorityCommandController } from "../controllers/senioritycommand.controller";
 import { SeniorityLoggingInterceptor } from "../interceptors/seniority.logging.interceptor";
 import { CommandBus, EventBus, UnhandledExceptionBus } from "@nestjs/cqrs";
 import { SeniorityAuthGuard } from "../guards/seniorityauthguard.guard";
 
 @Module({
-  controllers: [SeniorityCommandController],
   providers: [
     SeniorityAuthGuard,
     SeniorityLoggingInterceptor,

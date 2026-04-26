@@ -6,7 +6,7 @@
 -- la regla §4.9.6 de docs/help.md.
 -- Idempotente: INSERT ... ON CONFLICT (code) DO UPDATE.
 -- ════════════════════════════════════════════════════════════════════
-INSERT INTO "organization_element_type_base_entity" ("code", "displayName", "description", "metadata", "createdBy", "active", "type")
+INSERT INTO "organization_element_type_base_entity" ("code", "displayName", "description", "metadata", "createdBy", "isActive", "type")
 VALUES
   ('DIVISION', 'División', 'Nivel divisional', jsonb_build_object('description','Nivel divisional'), 'system', TRUE, 'organizationelementtype'),
   ('AREA', 'Área', 'Área funcional', jsonb_build_object('description','Área funcional'), 'system', TRUE, 'organizationelementtype'),
@@ -18,5 +18,5 @@ ON CONFLICT ("code") DO UPDATE SET
   "displayName"      = EXCLUDED."displayName",
   "description"      = EXCLUDED."description",
   "metadata"         = EXCLUDED."metadata",
-  "active"           = TRUE,
+  "isActive"           = TRUE,
   "modificationDate" = NOW();

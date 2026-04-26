@@ -30,13 +30,11 @@
 
 
 import { Module } from "@nestjs/common";
-import { OrganizationNodeCommandController } from "../controllers/organizationnodecommand.controller";
 import { OrganizationNodeLoggingInterceptor } from "../interceptors/organizationnode.logging.interceptor";
 import { CommandBus, EventBus, UnhandledExceptionBus } from "@nestjs/cqrs";
 import { OrganizationNodeAuthGuard } from "../guards/organizationnodeauthguard.guard";
 
 @Module({
-  controllers: [OrganizationNodeCommandController],
   providers: [
     OrganizationNodeAuthGuard,
     OrganizationNodeLoggingInterceptor,

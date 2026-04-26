@@ -82,6 +82,19 @@ import LoggerService, { logger } from "@core/logs/logger";
 
 */
 
+import { HorizontalModule } from "@common/horizontal";
+
+import { NomencladorListenersModule } from './modules/nomenclador-listeners/nomenclador-listeners.module';
+import { HeadcountOverrideModeModule } from "./modules/headcount-override-mode/modules/headcountoverridemode.module";
+import { HeadcountOverrideStatusModule } from "./modules/headcount-override-status/modules/headcountoverridestatus.module";
+import { NodeAssignmentActionModule } from "./modules/node-assignment-action/modules/nodeassignmentaction.module";
+import { NodeTypeModule } from "./modules/node-type/modules/nodetype.module";
+import { OrganizationElementTypeModule } from "./modules/organization-element-type/modules/organizationelementtype.module";
+import { OrganizationNodeStatusModule } from "./modules/organization-node-status/modules/organizationnodestatus.module";
+import { OrganizationStatusModule } from "./modules/organization-status/modules/organizationstatus.module";
+import { OrganizationTypeModule } from "./modules/organization-type/modules/organizationtype.module";
+import { SeniorityModule } from "./modules/seniority/modules/seniority.module";
+import { VacancyStatusModule } from "./modules/vacancy-status/modules/vacancystatus.module";
 @Module({
   imports: [
     // Se importa/registra el módulo de caché
@@ -130,6 +143,7 @@ import LoggerService, { logger } from "@core/logs/logger";
      * Módulos Organization de la aplicación
      */
     CqrsModule,
+    HorizontalModule,
     OrganizationModule,
         CatalogSyncLogModule,
     HeadcountOverrideModule,
@@ -156,6 +170,18 @@ import LoggerService, { logger } from "@core/logs/logger";
           }),
         ]
       : []),
+  
+    NomencladorListenersModule,
+      HeadcountOverrideModeModule,
+    HeadcountOverrideStatusModule,
+    NodeAssignmentActionModule,
+    NodeTypeModule,
+    OrganizationElementTypeModule,
+    OrganizationNodeStatusModule,
+    OrganizationStatusModule,
+    OrganizationTypeModule,
+    SeniorityModule,
+    VacancyStatusModule,
   ],
 
   /**

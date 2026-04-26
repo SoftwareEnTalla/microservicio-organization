@@ -1,0 +1,11 @@
+postgres-1-catalog-sync-log.sql
+postgres-2-organization-element-type.sql
+postgres-3-headcount-override-mode.sql
+postgres-4-headcount-override-status.sql
+postgres-5-node-assignment-action.sql
+postgres-6-node-type.sql
+postgres-7-organization-node-status.sql
+postgres-8-organization-type.sql
+postgres-9-organization-status.sql
+postgres-10-seniority.sql
+postgres-11-vacancy-status.sql

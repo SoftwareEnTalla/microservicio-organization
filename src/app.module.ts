@@ -68,6 +68,7 @@ import { PlannedSeatCommandService } from "./modules/planned-seat/services/plann
 import { PlannedSeatQueryService } from "./modules/planned-seat/services/plannedseatquery.service";
 
 import { CatalogClientModule } from "./modules/catalog-client/catalog-client.module";
+import { OrganizationCapacityHistoryModule } from "./modules/organization-capacity-history/organization-capacity-history.module";
 
 /*
 //TODO unused for while dependencies
@@ -151,6 +152,7 @@ import { VacancyStatusModule } from "./modules/vacancy-status/modules/vacancysta
     OrganizationNodeAttributeModule,
     OrganizationNodeModule,
     PlannedSeatModule,    
+    OrganizationCapacityHistoryModule,
     /**
      * Módulo Logger de la aplicación
      */

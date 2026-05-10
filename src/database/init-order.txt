@@ -9,3 +9,4 @@ postgres-8-organization-type.sql
 postgres-9-organization-status.sql
 postgres-10-seniority.sql
 postgres-11-vacancy-status.sql
+postgres-12-organization-capacity-history.sql
